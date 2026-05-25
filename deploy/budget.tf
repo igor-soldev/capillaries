@@ -1,0 +1,24 @@
+resource "aws_budgets_budget" "monthly_cost" {
+  name        = var.budget_name
+  budget_type = "COST"
+
+  limit_amount = var.budget_amount
+  limit_unit   = var.budget_unit
+
+  time_unit = "MONTHLY"
+
+  notification {
+    comparison_operator = "GREATER_THAN"
+    notification_type   = "ACTUAL"
+    threshold           = var.budget_threshold_percent
+    threshold_type      = "PERCENTAGE"
+  }
+
+  dynamic "subscriber" {
+    for_each = var.budget_email == "" ? [] : [var.budget_email]
+    content {
+      subscription_type = "EMAIL"
+      address           = subscriber.value
+    }
+  }
+}
