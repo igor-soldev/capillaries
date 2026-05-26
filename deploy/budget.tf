@@ -8,17 +8,10 @@ resource "aws_budgets_budget" "monthly_cost" {
   time_unit = "MONTHLY"
 
   notification {
-    comparison_operator = "GREATER_THAN"
-    notification_type   = "ACTUAL"
-    threshold           = var.budget_threshold_percent
-    threshold_type      = "PERCENTAGE"
-  }
-
-  dynamic "subscriber" {
-    for_each = var.budget_email == "" ? [] : [var.budget_email]
-    content {
-      subscription_type = "EMAIL"
-      address           = subscriber.value
-    }
+    comparison_operator        = "GREATER_THAN"
+    notification_type          = "ACTUAL"
+    threshold                  = var.budget_threshold_percent
+    threshold_type             = "PERCENTAGE"
+    subscriber_email_addresses = var.budget_email == "" ? [] : [var.budget_email]
   }
 }
